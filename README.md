@@ -17,20 +17,20 @@ The project workflow consists of the following steps:
    - 🏷️ **Feature Encoding:** Transformed categorical variables using OneHotEncoder.
    - 🔄 **Imputation:** Applied KNN Imputation to handle missing values.
    
-   ![Data Preparation](https://media.giphy.com/media/3o6MboRJmXSeL5sK7W/giphy.gif)
+   ![Data Preparation]([https://media.giphy.com/media/3o6MboRJmXSeL5sK7W/giphy.gif](https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExbTZ1cThpN2w3dGY4cXN0bm01dWF3amdnMmQ4MzB4OGkxa2FzenB6NSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/hW8zWb9GKoN6YRreJM/giphy.webp))
 
 2. **Model Training**
    - 🧪 Split the dataset into training and test sets (80% train, 20% test).
    - 📈 Trained a CatBoostRegressor model on the training set.
    - 🔍 Performed Grid Search to optimize hyperparameters.
 
-   ![Model Training](https://media.giphy.com/media/3o6Zt7Uzh8a6p15i2U/giphy.gif)
+   ![Model Training]([https://media.giphy.com/media/3o6Zt7Uzh8a6p15i2U/giphy.gif](https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExY3J0eGV4dzhqcnFpNnQ4OXJrbnJyaHN3d3c3bWQ0N2E2a2l4eTF5aCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/d2ZfqZY5eSCR0rza/giphy.gif))
 
 3. **Model Evaluation**
    - 🧮 Evaluated the model using various performance metrics.
    - 🎯 Fine-tuned the model based on evaluation results.
 
-   ![Model Evaluation](https://media.giphy.com/media/3o7btWoYp65N84s8Na/giphy.gif)
+   ![Model Evaluation]([https://media.giphy.com/media/3o7btWoYp65N84s8Na/giphy.gif](https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExaHVraHBycjhsaTV5M25xZ2c1OTg4MXE3YXRhbTB6YXczOTV2anR2dSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/Lk5BzpifzeI3KYm7n0/giphy.gif))
 
 ## Data Preparation
 The data cleaning process involved:
@@ -52,17 +52,23 @@ The model was evaluated using the following metrics:
 - 📏 **R^2 Score**
 
 **Best Model Parameters:**
-- 🔢 **Iterations:** XXXX
-- 🔢 **Learning Rate:** X.XX
-- 🔢 **Depth:** XX
-- 🔢 **L2 Leaf Reg:** X.X
+
+**Parameter Grid:**
+
+- iterations: [100, 300, 500, 700],
+- learning_rate: [0.001, 0.01, 0.05],
+- depth: [3, 5, 7, 10, 12],
+- l2_leaf_reg: [0.1, 1, 3, 5, 10]
+
 
 ## Results
+
 The model demonstrated high performance with low error metrics:
-- 📏 **MAE:** X.XX
-- 📏 **MSE:** X.XX
-- 📏 **RMSE:** X.XX
-- 📈 **R^2 Score:** X.XX
+
+- 📏 MAE: 47856.00886071866
+- 📏 MSE: 4370635560.1221075
+- 📏 RMSE: 66110.78248003201
+- 📈 R^2 Score: 0.7846459907700529
 
 ## Conclusion & Future Work
 The CatBoostRegressor model successfully predicts real estate prices with high accuracy. Future work will focus on:
@@ -100,12 +106,6 @@ To run the project, follow these steps:
     ```sh
     python evaluate_model.py
     ```
-
-## Contributors
-- Your Name - [@yourusername](https://github.com/yourusername) ✨
-
-## License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
