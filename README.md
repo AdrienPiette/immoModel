@@ -17,20 +17,20 @@ The project workflow consists of the following steps:
    - 🏷️ **Feature Encoding:** Transformed categorical variables using OneHotEncoder.
    - 🔄 **Imputation:** Applied KNN Imputation to handle missing values.
    
-   ![Data Preparation]([https://media.giphy.com/media/3o6MboRJmXSeL5sK7W/giphy.gif](https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExbTZ1cThpN2w3dGY4cXN0bm01dWF3amdnMmQ4MzB4OGkxa2FzenB6NSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/hW8zWb9GKoN6YRreJM/giphy.webp))
+   ![Data Preparation](https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExbTZ1cThpN2w3dGY4cXN0bm01dWF3amdnMmQ4MzB4OGkxa2FzenB6NSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/hW8zWb9GKoN6YRreJM/giphy.webp)
 
 2. **Model Training**
    - 🧪 Split the dataset into training and test sets (80% train, 20% test).
    - 📈 Trained a CatBoostRegressor model on the training set.
    - 🔍 Performed Grid Search to optimize hyperparameters.
 
-   ![Model Training]([https://media.giphy.com/media/3o6Zt7Uzh8a6p15i2U/giphy.gif](https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExY3J0eGV4dzhqcnFpNnQ4OXJrbnJyaHN3d3c3bWQ0N2E2a2l4eTF5aCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/d2ZfqZY5eSCR0rza/giphy.gif))
+   ![Model Training](https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExY3J0eGV4dzhqcnFpNnQ4OXJrbnJyaHN3d3c3bWQ0N2E2a2l4eTF5aCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/d2ZfqZY5eSCR0rza/giphy.gif)
 
 3. **Model Evaluation**
    - 🧮 Evaluated the model using various performance metrics.
    - 🎯 Fine-tuned the model based on evaluation results.
 
-   ![Model Evaluation]([https://media.giphy.com/media/3o7btWoYp65N84s8Na/giphy.gif](https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExaHVraHBycjhsaTV5M25xZ2c1OTg4MXE3YXRhbTB6YXczOTV2anR2dSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/Lk5BzpifzeI3KYm7n0/giphy.gif))
+   ![Model Evaluation](https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExaHVraHBycjhsaTV5M25xZ2c1OTg4MXE3YXRhbTB6YXczOTV2anR2dSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/Lk5BzpifzeI3KYm7n0/giphy.gif)
 
 ## Data Preparation
 The data cleaning process involved:
