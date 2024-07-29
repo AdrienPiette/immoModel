@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from sklearn.preprocessing import OneHotEncoder
+
 from catboost import CatBoostRegressor
 import numpy as np
 
@@ -17,7 +17,7 @@ def main ():
     st.sidebar.title("House Price Prediction")
     st.markdown("Welcome to House Price Prediction")
     st.sidebar.markdown("Welcome to House Price Prediction")
-    
+
     # variables for the model
     user_input = {}
 
@@ -40,3 +40,5 @@ def main ():
 
 if __name__ == '__main__':  
     main()
+
+
