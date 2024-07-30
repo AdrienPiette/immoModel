@@ -20,18 +20,21 @@ def main ():
 
     # variables for the model
     user_input = {}
-
-
-    for columns in df.columns:
-        if df[columns].dtype == 'int' or df[columns].dtype == 'float':
-            user_input[columns] = st.number_input(f"Enter {columns}", value=0)
-        else:
-            user_input[columns] = st.selectbox(f"Select {columns}", df[columns].unique())
+    user_input['bedrooms'] = st.sidebar.slider('Bedrooms', 1, 5, 1)
+    user_input['bathrooms'] = st.sidebar.slider('Bathrooms', 1, 5, 1)  
+    user_input['sqft_living'] = st.sidebar.slider('Square Feet Living', 0, 100, 290)    
     
+
+
+
+
+
+
+
+
+
     user_input_df = pd.DataFrame([user_input])
-    st.write(user_input_df)
     
-
     if st.button("Predict"):
         model = CatBoostRegressor()
         model.load_model('catboost_model')
