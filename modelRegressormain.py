@@ -9,12 +9,14 @@ from catboost import CatBoostRegressor
 from typing import Tuple, List, Dict
 
 # Load dataset
+
 df = pd.read_csv('cleaned_dataset.csv')
 print(df.shape)
 print(df.info())
 print(df.describe())
 
 def clean_data(df: pd.DataFrame) -> pd.DataFrame:
+
     """
     Cleans the dataset by dropping specified columns.
     
@@ -23,6 +25,7 @@ def clean_data(df: pd.DataFrame) -> pd.DataFrame:
     
     Returns:
     - pd.DataFrame: The cleaned DataFrame.
+
     """
     columns_to_drop = [
         'country', 'fireplace', 'monthlycharges', 'locality', 
@@ -32,10 +35,12 @@ def clean_data(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 # Apply cleaning function
+
 df_clean = clean_data(df.copy())
 print(df_clean.head())
 
 def encode_categorical_features(df: pd.DataFrame, columns_to_encode: List[str]) -> pd.DataFrame:
+
     """
     Encodes categorical features using OneHotEncoder.
     
@@ -45,7 +50,9 @@ def encode_categorical_features(df: pd.DataFrame, columns_to_encode: List[str]) 
     
     Returns:
     - pd.DataFrame: DataFrame with encoded features.
+
     """
+
     data_to_encode = df[columns_to_encode]
     
     one = OneHotEncoder(sparse_output=False, drop='first')  # Updated argument
@@ -55,6 +62,7 @@ def encode_categorical_features(df: pd.DataFrame, columns_to_encode: List[str]) 
     return pd.concat([df.drop(columns=columns_to_encode), encoded_df], axis=1)
 
 # Define columns to encode
+
 columns_to_encode = ['district', 'floodingzone', 'subtypeofproperty', 'typeofsale', 'peb', 'province', 'region']
 df_final = encode_categorical_features(df_clean, columns_to_encode)
 print(df_final.shape)
@@ -62,6 +70,7 @@ print(df_final.info())
 print(df_final.head())
 
 def impute_data(X: np.ndarray) -> np.ndarray:
+
     """
     Imputes missing values using KNNImputer.
     
@@ -70,11 +79,13 @@ def impute_data(X: np.ndarray) -> np.ndarray:
     
     Returns:
     - np.ndarray: The feature array with imputed values.
+
     """
     imputer = KNNImputer(n_neighbors=5)
     return imputer.fit_transform(X)
 
 # Prepare features and target variable
+
 y = df_final['price'].values
 X = df_final.drop(columns=['price']).values
 
@@ -86,10 +97,12 @@ print("y_train shape:", y_train.shape)
 print("y_test shape:", y_test.shape)
 
 # Impute missing values in training and test sets
+
 X_train_imputed = impute_data(X_train)
 X_test_imputed = impute_data(X_test)
 
 def train_and_evaluate_model(X_train: np.ndarray, y_train: np.ndarray, X_test: np.ndarray, y_test: np.ndarray) -> None:
+
     """
     Trains a CatBoostRegressor model, evaluates it, and prints the performance metrics.
     
@@ -99,6 +112,7 @@ def train_and_evaluate_model(X_train: np.ndarray, y_train: np.ndarray, X_test: n
     - X_test (np.ndarray): Test features.
     - y_test (np.ndarray): Test target values.
     """
+
     model = CatBoostRegressor(random_state=42)
     model.fit(X_train, y_train)
     
@@ -115,15 +129,18 @@ def train_and_evaluate_model(X_train: np.ndarray, y_train: np.ndarray, X_test: n
     print(f"R^2 Score: {r2}")
 
 # Train and evaluate the model
+
 train_and_evaluate_model(X_train_imputed, y_train, X_test_imputed, y_test)
 
 def perform_grid_search(X_train: np.ndarray, y_train: np.ndarray) -> None:
+
     """
     Performs GridSearchCV to find the best hyperparameters for the model.
     
     Args:
     - X_train (np.ndarray): Training features.
     - y_train (np.ndarray): Training target values.
+
     """
     param_grid = {
         'iterations': [100, 300, 500, 700],
@@ -150,6 +167,7 @@ def perform_grid_search(X_train: np.ndarray, y_train: np.ndarray) -> None:
     print("Mean CV score (MAE): ", -cv_scores.mean())
     
     # Evaluate the best model on the test set
+
     y_pred = best_model.predict(X_test_imputed)
     mae = mean_absolute_error(y_test, y_pred)
     mse = mean_squared_error(y_test, y_pred)
@@ -162,4 +180,7 @@ def perform_grid_search(X_train: np.ndarray, y_train: np.ndarray) -> None:
     print(f"R^2 Score (Best Model): {r2}")
 
 # Perform grid search and evaluate the best model
+
 perform_grid_search(X_train_imputed, y_train)
+
+
