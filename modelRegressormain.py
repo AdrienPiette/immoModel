@@ -90,6 +90,7 @@ y = df_final['price'].values
 X = df_final.drop(columns=['price']).values
 
 # Split the data
+
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 print("X_train shape:", X_train.shape)
 print("X_test shape:", X_test.shape)
@@ -111,6 +112,7 @@ def train_and_evaluate_model(X_train: np.ndarray, y_train: np.ndarray, X_test: n
     - y_train (np.ndarray): Training target values.
     - X_test (np.ndarray): Test features.
     - y_test (np.ndarray): Test target values.
+    
     """
 
     model = CatBoostRegressor(random_state=42)
@@ -128,7 +130,9 @@ def train_and_evaluate_model(X_train: np.ndarray, y_train: np.ndarray, X_test: n
     print(f"RMSE: {rmse}")
     print(f"R^2 Score: {r2}")
 
-# Train and evaluate the model
+    model.save_model('catboost_model.cbm')
+
+'''# Train and evaluate the model
 
 train_and_evaluate_model(X_train_imputed, y_train, X_test_imputed, y_test)
 
@@ -179,8 +183,9 @@ def perform_grid_search(X_train: np.ndarray, y_train: np.ndarray) -> None:
     print(f"RMSE (Best Model): {rmse}")
     print(f"R^2 Score (Best Model): {r2}")
 
+    best_model.save_model('catboost_model.cbm') 
+
 # Perform grid search and evaluate the best model
 
 perform_grid_search(X_train_imputed, y_train)
-
-
+'''

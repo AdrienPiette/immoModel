@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 from catboost import CatBoostRegressor
 
+
+
 # Function to load the model
 def load_model():
     model = CatBoostRegressor()
@@ -23,95 +25,68 @@ def main():
     st.title("Real Estate Price Prediction")
 
     # Predefined options for each feature
-    furnished_options = ["Yes", "No"]
-
-    district_options = ["district_Aalst", "district_Antwerp","district_Arlon" , "district_Ath",
-                        "district_Bastogne","district_Brugge","district_Brussels","district_Charleroi",
-                        "district_Dendermonde","district_Diksmuide","district_Dinant","district_Eeklo",
-                        "district_Gent","district_Halle-Vilvoorde","district_Hasselt","district_Huy",
-                        "district_Ieper" ,"district_Kortrijk","district_Leuven","district_Liège",
-                        "district_Maaseik","district_Marche-en-Famenne","district_Mechelen","district_Mons",
-                        "district_Mouscron","district_Namur","district_Neufchâteau","district_Nivelles",
-                        "district_Oostend","district_Oudenaarde","district_Philippeville","district_Sint-Niklaas",
-                        "district_Roeselare","district_Soignies","district_Thuin","district_Tielt",
-                        "district_Tongeren","district_Tournai","district_Turnhout","district_Verviers",
-                        "district_Veurne","district_Virton","district_Waremme"]  
-
-    subtypeofproperty_options = ["subtypeofproperty_apartment", "subtypeofproperty_apartement_block","subtypeofproperty_bungalow","subtypeofproperty_castle",
-                                 "subtypeofproperty_chalet","subtypeofproperty_country_cottage","subtypeofproperty_duplex","subtypeofproperty_exeptional_property",
-                                 "subtypeofproperty_farmhouse","subtypeofproperty_flat_studio","subtypeofproperty_ground_floor","subtypeofproperty_house",
-                                 "subtypeofproperty_kot","subtypeofproperty_loft","subtypeofproperty_mansion","subtypeofproperty_manor_house",
-                                 "subtypeofproperty_mixed_use_building","subtypeofproperty_other_property","subtypeofproperty_penthouse","subtypeofproperty_service_flat",
-                                 "subtypeofproperty_pavilion","subtypeofproperty", "subtypeofproperty_town_house","subtypeofproperty_triplex","subtypeofproperty_villa",]  
-
-    peb_options = ["peb_A", "peb_A+", "peb_A++", 
-                   "peb_A_A+", "peb_B", "peb_B_A", 
-                   "peb_C","peb_D", "peb_E","peb_E_D","peb_F","peb_F_C",
-                   "peb_F_D","peb_F_E","peb_G"] 
-    
-    province_options = ["province_Antwerp", "province_Brussels", "province_East Flanders",
-                        "province_Flemish Brabant","province_Hainaut", "province_Limburg",
-                        "province_Liège","province_Luxembourg","province_Namur",
-                        "province_Walloon Brabant", "province_West Flanders" ] 
-    
-    region_options = ["region_Brussels", "region_Flanders", "region_Wallonie"] 
     bathroom_options = ["1", "2", "3", "4", "5", "6"]
     bedroom_options = ["1", "2", "3", "4", "5", "6"]
-    garden_options = ["Yes", "No"]
-    kitchen_options = ["Yes", "No"]
-    living_area = []
-    number_of_facades = ["1", "2", "3", "4"]
-    showercount_options = ["1", "2", "3"]
-    stateofbuilding_options = ["stateofbuilding_as_new", "stateofbuilding_good", "stateofbuilding_just_renovated",
-                               "stateofbuilding_to_be_done_up", "stateofbuilding_to_restore"]
-    surfaceofplot = []
-    swimmingpool_options = ["Yes", "No"]
-    terrace_options = ["Yes", "No"]
-    toilet_options = ["1", "2", "3", "4", "5", "6"]
-    
-
-    # User input fields
-    furnished = st.selectbox("Furnished", furnished_options)
-    district = st.selectbox("District", district_options)
-    subtypeofproperty = st.selectbox("Subtype of Property", subtypeofproperty_options)
-    peb = st.selectbox("PEB", peb_options)
-    province = st.selectbox("Province", province_options)
-    region = st.selectbox("Region", region_options)
-    bathroom = st.selectbox("Bathroom", bathroom_options)
-    bedroom = st.selectbox("Bedroom", bedroom_options)
-    garden = st.selectbox("Garden", garden_options)
-    kitchen = st.selectbox("Kitchen", kitchen_options)
+    construction_year = st.number_input("Construction Year")
+    country_options = st.selectbox("Country", country_options)
+    district_options = st.selectbox("District", district_options)
+    fire_place_options = st.selectbox("Fire Place", fire_place_options)
+    flooding_zone_options = st.selectbox("Flooding Zone", flooding_zone_options)
+    furnished_options = st.selectbox("Furnished", furnished_options)
+    garden_options = st.selectbox("Garden", garden_options)
+    kitchen_options = st.selectbox("Kitchen", kitchen_options)
     living_area = st.number_input("Living Area")
+    locality_options = st.selectbox("Locality", locality_options)
+    monthly_charges = st.number_input("Monthly Charges")
     number_of_facades = st.selectbox("Number of Facades", number_of_facades)
-    showercount = st.selectbox("Shower Count", showercount_options) 
-    stateofbuilding = st.selectbox("State of Building", stateofbuilding_options)
+    peb_options = st.selectbox("PEB", peb_options)
+    postal_code = st.number_input("Postal Code")
+    property_id = st.number_input("Property ID")
+    province_options = st.selectbox("Province", province_options)
+    region_options = st.selectbox("Region", region_options)
+    room_count_options = st.selectbox("Room Count", room_count_options)
+    showercount_options = st.selectbox("Shower Count", showercount_options)
+    stateofbuilding_options = st.selectbox("State of Building", stateofbuilding_options)
+    subtypeofproperty_options = st.selectbox("Subtype of Property", subtypeofproperty_options)
     surfaceofplot = st.number_input("Surface of Plot")
-    swimmingpool = st.selectbox("Swimming Pool", swimmingpool_options)
-    terrace = st.selectbox("Terrace", terrace_options)
-    toilet = st.selectbox("Toilet", toilet_options)
+    swimmingpool_options = st.selectbox("Swimming Pool", swimmingpool_options)
+    terrace_options = st.selectbox("Terrace", terrace_options)
+    toilet_options = st.selectbox("Toilet", toilet_options)
+    typeofproperty_options = st.selectbox("Type of Property", typeofproperty_options)
+    typeofsale_options = st.selectbox("Type of Sale", typeofsale_options)
 
 
     # Collect user input into a dictionary
     user_input = {
-        'furnished': furnished,
-        'district': district,
-        'subtypeofproperty': subtypeofproperty,
-        'peb': peb,
-        'province': province,
-        'region': region,
-        'bathroom': bathroom,
-        'bedroom': bedroom,
-        'garden': garden,
-        'kitchen': kitchen,
-        'living_area': living_area,
-        'number_of_facades': number_of_facades,
-        'showercount': showercount,
-        'stateofbuilding': stateofbuilding,
+        'bathroomcount': bathroom_options,
+        'bedroomrcount': bedroom_options,
+        'constructionyear':construction_year,
+        'country':country_options,
+        'district': district_options,
+        'fireplace': fire_place_options,
+        'floodingzone': flooding_zone_options,
+        'furnished': furnished_options,
+        'garden': garden_options,
+        'kitchen': kitchen_options,
+        'livingarea': living_area,
+        'locality': locality_options,
+        'monthlycharges': monthly_charges,
+        'numberoffacades': number_of_facades,
+        'peb': peb_options,
+        'postalcode': postal_code,
+        'propertyid': property_id,
+        'province': province_options,
+        'region': region_options,
+        'roomcount': room_count_options,
+        'showercount': showercount_options,
+        'stateofbuilding': stateofbuilding_options,
+        'subtypeofproperty': subtypeofproperty_options,
         'surfaceofplot': surfaceofplot,
-        'swimmingpool': swimmingpool,
-        'terrace': terrace,
-        'toilet': toilet
-
+        'swimmingpool': swimmingpool_options,
+        'terrace': terrace_options,
+        'toiletcount': toilet_options,
+        'typeofproperty': typeofproperty_options,
+        'typeofsale': typeofsale_options
     }
 
     # Preprocess the user input
@@ -127,4 +102,6 @@ def main():
 
 if __name__ == '__main__':
     main()
+
     
+
