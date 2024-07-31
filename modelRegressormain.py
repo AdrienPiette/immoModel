@@ -7,12 +7,11 @@ from sklearn.model_selection import train_test_split, GridSearchCV, cross_val_sc
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from catboost import CatBoostRegressor
 from typing import List
+import pickle
 
 # Load dataset
 df = pd.read_csv('cleaned_dataset.csv')
-print(df.shape)
-print(df.info())
-print(df.describe())
+
 
 def impute_data(df: pd.DataFrame) -> pd.DataFrame:
     """
@@ -43,31 +42,28 @@ def encode_categorical_features(df: pd.DataFrame, columns_to_encode: List[str]) 
     one = OneHotEncoder(sparse_output=False, drop='first')
     encoded_data = one.fit_transform(df[columns_to_encode])
     encoded_df = pd.DataFrame(encoded_data, columns=one.get_feature_names_out(columns_to_encode))
+    with open('onehotencoder.plk', 'wb') as f:
+        pickle.dump(one, f)
+
     return pd.concat([df.drop(columns=columns_to_encode), encoded_df], axis=1)
 
 # Define columns to encode
 columns_to_encode = ['district', 'floodingzone', 'subtypeofproperty', 'peb', 'province', 'region',
-                     'locality', 'stateofbuilding', 'swimmingpool', 'terrace', 'kitchen', 'garden']
+                     'stateofbuilding', 'swimmingpool', 'terrace', 'kitchen', 'garden']
 
 # Impute missing values
 df = impute_data(df)
 
 # Encode categorical features
 df_final = encode_categorical_features(df, columns_to_encode)
-print(df_final.shape)
-print(df_final.info())
-print(df_final.head())
 
 # Prepare features and target variable
-y = df_final['price'].values
-X = df_final.drop(columns=['price']).values
+y = df_final['price']
+X = df_final.drop(columns=['price'])
 
 # Split the data
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-print("X_train shape:", X_train.shape)
-print("X_test shape:", X_test.shape)
-print("y_train shape:", y_train.shape)
-print("y_test shape:", y_test.shape)
+
 
 def train_and_evaluate_model(X_train: np.ndarray, y_train: np.ndarray, X_test: np.ndarray, y_test: np.ndarray) -> None:
     """
@@ -82,7 +78,7 @@ def train_and_evaluate_model(X_train: np.ndarray, y_train: np.ndarray, X_test: n
     """
     model = CatBoostRegressor(random_state=42)
     model.fit(X_train, y_train)
-    
+
     y_pred = model.predict(X_test)
     
     mae = mean_absolute_error(y_test, y_pred)                          
@@ -94,6 +90,7 @@ def train_and_evaluate_model(X_train: np.ndarray, y_train: np.ndarray, X_test: n
     print(f"MSE: {mse}")
     print(f"RMSE: {rmse}")
     print(f"R^2 Score: {r2}")
+
 
     model.save_model('catboost_model.cbm')
 
