@@ -3,27 +3,27 @@ import pandas as pd
 from catboost import CatBoostRegressor
 import pickle
 
-df = pd.read_csv('cleaned_dataset.csv')
 # Function to load the model
 def load_model():
     model = CatBoostRegressor()
     model.load_model('catboost_model.cbm')
     return model
 
+# load the model onehotencoder
 
 with open('onehotencoder.plk', 'rb') as f:
     one = pickle.load(f)
+# Load the cleaned dataset
+
+df = pd.read_csv('cleaned_dataset.csv')
+# One-hot encode the categorical features
 
 columns_to_encode = ['district', 'floodingzone', 'subtypeofproperty', 'peb', 'province', 'region',
                      'stateofbuilding', 'swimmingpool', 'terrace', 'kitchen', 'garden']
 
 one_encoding = one.transform(df[columns_to_encode])
 one_encoding_df = pd.DataFrame(one_encoding, columns=one.get_feature_names_out(columns_to_encode))
-df_final= pd.concat([df.drop(columns=columns_to_encode), one_encoding_df], axis=1)
-
-
-
-
+df_final = pd.concat([df.drop(columns=columns_to_encode), one_encoding_df], axis=1)
 
 # Function to preprocess user input
 def preprocess_input(user_input):
@@ -38,9 +38,11 @@ def preprocess_input(user_input):
 
 # Main function to run the Streamlit app
 def main():
-    st.title("Real Estate Price Prediction")
+    st.title("🏡 Real Estate Price Prediction")
+    st.markdown("### Predict the price of your property with our advanced CatBoost model")
 
     st.sidebar.header("Property Details")
+    st.sidebar.markdown("Provide the details of the property for prediction:")
 
     # Predefined options for each feature
     district_options = ["district_Aalst", "district_Antwerp","district_Arlon" , "district_Ath",
@@ -62,7 +64,7 @@ def main():
                                  "subtypeofproperty_farmhouse","subtypeofproperty_flat_studio","subtypeofproperty_ground_floor","subtypeofproperty_house",
                                  "subtypeofproperty_kot","subtypeofproperty_loft","subtypeofproperty_mansion","subtypeofproperty_manor_house",
                                  "subtypeofproperty_mixed_use_building","subtypeofproperty_other_property","subtypeofproperty_penthouse","subtypeofproperty_service_flat",
-                                 "subtypeofproperty_pavilion","subtypeofproperty", "subtypeofproperty_town_house","subtypeofproperty_triplex","subtypeofproperty_villa",]
+                                 "subtypeofproperty_pavilion","subtypeofproperty", "subtypeofproperty_town_house","subtypeofproperty_triplex","subtypeofproperty_villa"]
 
     peb_options = ["peb_A", "peb_A+", "peb_A++", 
                    "peb_A_A+", "peb_B", "peb_B_A", 
@@ -90,33 +92,40 @@ def main():
 
     # User input fields
     with st.sidebar:
-        bathroom = st.selectbox("Bathroom", bathroom_options)
-        bedroom = st.selectbox("Bedroom", bedroom_options)
-        construction_year = st.number_input("Construction Year", min_value=1800, max_value=2024, value=2020)
-        district = st.selectbox("District", district_options)
-        fireplace = st.selectbox("Fireplace", fireplace_options)
-        floodingzone = st.selectbox("Flooding Zone", floodingzone_options)
-        garden = st.selectbox("Garden", garden_options)
-        kitchen = st.selectbox("Kitchen", kitchen_options)
-        living_area = st.number_input("Living Area (m²)", min_value=10, max_value=1000, value=100)
-        monthlycharges = st.number_input("Monthly Charges (€)", min_value=0, max_value=5000, value=100)
-        number_of_facades = st.selectbox("Number of Facades", number_of_facades_options)
-        peb = st.selectbox("PEB", peb_options)
+        st.markdown("### 📑 General Information")
+        typeofproperty = st.selectbox("Type of Property", typeofproperty_options)
+        subtypeofproperty = st.selectbox("Subtype of Property", subtypeofproperty_options)
         province = st.selectbox("Province", province_options)
         region = st.selectbox("Region", region_options)
-        roomcount = st.number_input("Room Count", min_value=1, max_value=20, value=5)
-        showercount = st.selectbox("Shower Count", showercount_options)
-        stateofbuilding = st.selectbox("State of Building", stateofbuilding_options)
-        subtypeofproperty = st.selectbox("Subtype of Property", subtypeofproperty_options)
+        district = st.selectbox("District", district_options)
+
+        st.markdown("### 📐 Property Details")
+        construction_year = st.number_input("Construction Year", min_value=1800, max_value=2024, value=2020)
+        living_area = st.number_input("Living Area (m²)", min_value=10, max_value=1000, value=100)
         surfaceofplot = st.number_input("Surface of Plot (m²)", min_value=10, max_value=10000, value=200)
+        roomcount = st.number_input("Room Count", min_value=1, max_value=20, value=5)
+        number_of_facades = st.selectbox("Number of Facades", number_of_facades_options)
+
+        st.markdown("### 🛋️ Amenities")
+        kitchen = st.selectbox("Kitchen", kitchen_options)
+        bathroom = st.selectbox("Bathroom", bathroom_options)
+        bedroom = st.selectbox("Bedroom", bedroom_options)
+        showercount = st.selectbox("Shower Count", showercount_options)
+        toilet = st.selectbox("Toilet", toilet_options)
+        garden = st.selectbox("Garden", garden_options)
         swimmingpool = st.selectbox("Swimming Pool", swimmingpool_options)
         terrace = st.selectbox("Terrace", terrace_options)
-        toilet = st.selectbox("Toilet", toilet_options)
-        typeofproperty = st.selectbox("Type of Property", typeofproperty_options)
+        fireplace = st.selectbox("Fireplace", fireplace_options)
+        floodingzone = st.selectbox("Flooding Zone", floodingzone_options)
+
+        st.markdown("### 📜 Additional Information")
+        peb = st.selectbox("PEB", peb_options)
+        stateofbuilding = st.selectbox("State of Building", stateofbuilding_options)
+        monthlycharges = st.number_input("Monthly Charges (€)", min_value=0, max_value=5000, value=100)
 
     user_input = {
         'bathroomcount': bathroom,
-        'bedroomrcount': bedroom,
+        'bedroomcount': bedroom,
         'constructionyear': construction_year,
         'district': district,
         'fireplace': fireplace,
@@ -139,14 +148,20 @@ def main():
         'toiletcount': toilet,
         'typeofproperty': typeofproperty
     }
-
+    '''user_input_df = pd.DataFrame(user_input,index=[1])'''
     user_input_df = preprocess_input(user_input)
+    '''X = user_input[one.feature_names_in_].reshape(1, -1)
+    X = one.transform(X)
+    
+    user_input_df = pd.concat([user_input,X],axis=1).drop(columns=['district','fireplace','floodingzone','subtypeofproperty','peb', 'province', 'region',
+                            'garden','kitchen','stateofbuilding','swimmingpool','terrace','typeofproperty'])
+'''
 
     model = load_model()
 
     if st.button("Predict"):
         prediction = model.predict(user_input_df)
-        st.subheader(f"Predicted Price: €{prediction[0]:,.2f}")
+        st.subheader(f"🏷️ Predicted Price: **€{prediction[0]:,.2f}**")
 
 if __name__ == '__main__':
     main()

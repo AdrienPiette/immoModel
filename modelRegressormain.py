@@ -91,7 +91,7 @@ def train_and_evaluate_model(X_train: np.ndarray, y_train: np.ndarray, X_test: n
     print(f"RMSE: {rmse}")
     print(f"R^2 Score: {r2}")
 
-
+    print(df_final.columns)
     model.save_model('catboost_model.cbm')
 
 # Train and evaluate the model
