@@ -9,31 +9,28 @@ def load_model():
     model.load_model('catboost_model.cbm')
     return model
 
-# load the model onehotencoder
-
+# Load the one-hot encoder
 with open('onehotencoder.plk', 'rb') as f:
     one = pickle.load(f)
+
 # Load the cleaned dataset
-
 df = pd.read_csv('cleaned_dataset.csv')
+
 # One-hot encode the categorical features
-
 columns_to_encode = ['district', 'floodingzone', 'subtypeofproperty', 'peb', 'province', 'region',
-                     'stateofbuilding', 'swimmingpool', 'terrace', 'kitchen', 'garden']
-
+                     'stateofbuilding', 'swimmingpool', 'terrace', 'kitchen', 'garden','typeofproperty']
 one_encoding = one.transform(df[columns_to_encode])
 one_encoding_df = pd.DataFrame(one_encoding, columns=one.get_feature_names_out(columns_to_encode))
 df_final = pd.concat([df.drop(columns=columns_to_encode), one_encoding_df], axis=1)
 
 # Function to preprocess user input
 def preprocess_input(user_input):
-    categorical_features = ['district','fireplace','floodingzone','subtypeofproperty','peb', 'province', 'region',
-                            'garden','kitchen','stateofbuilding','swimmingpool','terrace','typeofproperty']
-
+    categorical_features = ['district', 'floodingzone', 'subtypeofproperty', 'peb', 'province', 'region',
+                     'stateofbuilding', 'swimmingpool', 'terrace', 'kitchen', 'garden','typeofproperty']
     user_input_df = pd.DataFrame([user_input])
-    dummies = pd.get_dummies(user_input_df[categorical_features])
-    user_input_df = pd.concat([user_input_df, dummies], axis=1)
-    user_input_df = user_input_df.drop(categorical_features, axis=1)
+    one_encoding = one.transform(user_input_df[categorical_features])
+    one_encoding_df = pd.DataFrame(one_encoding, columns=one.get_feature_names_out(categorical_features))
+    user_input_df = pd.concat([user_input_df.drop(columns=categorical_features), one_encoding_df], axis=1)
     return user_input_df
 
 # Main function to run the Streamlit app
@@ -45,46 +42,32 @@ def main():
     st.sidebar.markdown("Provide the details of the property for prediction:")
 
     # Predefined options for each feature
-    district_options = ["district_Aalst", "district_Antwerp","district_Arlon" , "district_Ath",
-                        "district_Bastogne","district_Brugge","district_Brussels","district_Charleroi",
-                        "district_Dendermonde","district_Diksmuide","district_Dinant","district_Eeklo",
-                        "district_Gent","district_Halle-Vilvoorde","district_Hasselt","district_Huy",
-                        "district_Ieper" ,"district_Kortrijk","district_Leuven","district_Liège",
-                        "district_Maaseik","district_Marche-en-Famenne","district_Mechelen","district_Mons",
-                        "district_Mouscron","district_Namur","district_Neufchâteau","district_Nivelles",
-                        "district_Oostend","district_Oudenaarde","district_Philippeville","district_Sint-Niklaas",
-                        "district_Roeselare","district_Soignies","district_Thuin","district_Tielt",
-                        "district_Tongeren","district_Tournai","district_Turnhout","district_Verviers",
-                        "district_Veurne","district_Virton","district_Waremme"]
+    district_options = ["Aalst", "Antwerp", "Arlon", "Ath", "Bastogne", "Brugge", "Brussels", "Charleroi",
+                        "Dendermonde", "Diksmuide", "Dinant", "Eeklo", "Gent", "Halle-Vilvoorde", "Hasselt", "Huy",
+                        "Ieper", "Kortrijk", "Leuven", "Liège", "Maaseik", "Marche-en-Famenne", "Mechelen", "Mons",
+                        "Mouscron", "Namur", "Neufchâteau", "Nivelles", "Oostend", "Oudenaarde", "Philippeville", "Sint-Niklaas",
+                        "Roeselare", "Soignies", "Thuin", "Tielt", "Tongeren", "Tournai", "Turnhout", "Verviers",
+                        "Veurne", "Virton", "Waremme"]
 
     fireplace_options = ["Yes", "No"]
     floodingzone_options = ["Yes", "No"]
-    subtypeofproperty_options = ["subtypeofproperty_apartment", "subtypeofproperty_apartement_block","subtypeofproperty_bungalow","subtypeofproperty_castle",
-                                 "subtypeofproperty_chalet","subtypeofproperty_country_cottage","subtypeofproperty_duplex","subtypeofproperty_exeptional_property",
-                                 "subtypeofproperty_farmhouse","subtypeofproperty_flat_studio","subtypeofproperty_ground_floor","subtypeofproperty_house",
-                                 "subtypeofproperty_kot","subtypeofproperty_loft","subtypeofproperty_mansion","subtypeofproperty_manor_house",
-                                 "subtypeofproperty_mixed_use_building","subtypeofproperty_other_property","subtypeofproperty_penthouse","subtypeofproperty_service_flat",
-                                 "subtypeofproperty_pavilion","subtypeofproperty", "subtypeofproperty_town_house","subtypeofproperty_triplex","subtypeofproperty_villa"]
+    subtypeofproperty_options = ["apartment", "apartement_block", "bungalow", "castle", "chalet", "country_cottage", "duplex", "exeptional_property",
+                                 "farmhouse", "flat_studio", "ground_floor", "house", "kot", "loft", "mansion", "manor_house",
+                                 "mixed_use_building", "other_property", "penthouse", "service_flat", "pavilion", "town_house", "triplex", "villa"]
 
-    peb_options = ["peb_A", "peb_A+", "peb_A++", 
-                   "peb_A_A+", "peb_B", "peb_B_A", 
-                   "peb_C","peb_D", "peb_E","peb_E_D","peb_F","peb_F_C",
-                   "peb_F_D","peb_F_E","peb_G"]
+    peb_options = ["A", "A+", "A++", "A_A+", "B", "B_A", "C", "D", "E", "E_D", "F", "F_C", "F_D", "F_E", "G"]
 
-    province_options = ["province_Antwerp", "province_Brussels", "province_East Flanders",
-                        "province_Flemish Brabant","province_Hainaut", "province_Limburg",
-                        "province_Liège","province_Luxembourg","province_Namur",
-                        "province_Walloon Brabant", "province_West Flanders"]
+    province_options = ["Antwerp", "Brussels", "East Flanders", "Flemish Brabant", "Hainaut", "Limburg", "Liège", "Luxembourg", "Namur",
+                        "Walloon Brabant", "West Flanders"]
 
-    region_options = ["region_Brussels", "region_Flanders", "region_Wallonie"]
+    region_options = ["Brussels", "Flanders", "Wallonie"]
     garden_options = ["Yes", "No"]
     kitchen_options = ["New", "Installed", "Semi-equipped", "USA Hyper-equipped"]
     number_of_facades_options = ["1", "2", "3", "4"]
     bathroom_options = ["1", "2", "3", "4", "5", "6"]
     bedroom_options = ["1", "2", "3", "4", "5", "6"]
-    showercount_options = ["1", "2", "3","4","5","6"]
-    stateofbuilding_options = ["As new", "Good", "Just renovated",
-                               "To be done up", "To restore"]
+    showercount_options = ["1", "2", "3", "4", "5", "6"]
+    stateofbuilding_options = ["As new", "Good", "Just renovated", "To be done up", "To restore"]
     swimmingpool_options = ["Yes", "No"]
     terrace_options = ["Yes", "No"]
     toilet_options = ["1", "2", "3", "4", "5", "6"]
@@ -113,50 +96,49 @@ def main():
         showercount = st.selectbox("Shower Count", showercount_options)
         toilet = st.selectbox("Toilet", toilet_options)
         garden = st.selectbox("Garden", garden_options)
+        garden = garden_options.index(garden)
         swimmingpool = st.selectbox("Swimming Pool", swimmingpool_options)
+        swimmingpool = swimmingpool_options.index(swimmingpool)
         terrace = st.selectbox("Terrace", terrace_options)
         fireplace = st.selectbox("Fireplace", fireplace_options)
+        fireplace = fireplace_options.index(fireplace)
         floodingzone = st.selectbox("Flooding Zone", floodingzone_options)
+        floodingzone = floodingzone_options.index(floodingzone)
 
         st.markdown("### 📜 Additional Information")
         peb = st.selectbox("PEB", peb_options)
         stateofbuilding = st.selectbox("State of Building", stateofbuilding_options)
-        monthlycharges = st.number_input("Monthly Charges (€)", min_value=0, max_value=5000, value=100)
+        
 
     user_input = {
         'bathroomcount': bathroom,
         'bedroomcount': bedroom,
         'constructionyear': construction_year,
-        'district': district,
-        'fireplace': fireplace,
-        'floodingzone': floodingzone,
-        'garden': garden,
-        'kitchen': kitchen,
         'livingarea': living_area,
         'numberoffacades': number_of_facades,
-        'monthlycharges': monthlycharges,
+        'roomcout': roomcount,
+        'showercount': showercount,
+        'surfaceofplot': surfaceofplot,
+        'toiletcount': toilet,
+        'district': district,
+        'floodingzone': floodingzone,
+        'subtypeofproperty': subtypeofproperty,
         'peb': peb,
         'province': province,
         'region': region,
-        'roomcount': roomcount,
-        'showercount': showercount,
+        'fireplace': fireplace, 
         'stateofbuilding': stateofbuilding,
-        'subtypeofproperty': subtypeofproperty,
-        'surfaceofplot': surfaceofplot,
         'swimmingpool': swimmingpool,
         'terrace': terrace,
-        'toiletcount': toilet,
-        'typeofproperty': typeofproperty
-    }
-    '''user_input_df = pd.DataFrame(user_input,index=[1])'''
-    user_input_df = preprocess_input(user_input)
-    '''X = user_input[one.feature_names_in_].reshape(1, -1)
-    X = one.transform(X)
+        'kitchen': kitchen,
+        'garden': garden,
+        'typeofproperty': typeofproperty,        
     
-    user_input_df = pd.concat([user_input,X],axis=1).drop(columns=['district','fireplace','floodingzone','subtypeofproperty','peb', 'province', 'region',
-                            'garden','kitchen','stateofbuilding','swimmingpool','terrace','typeofproperty'])
-'''
+    }
 
+    # Preprocess the user input
+    user_input_df = preprocess_input(user_input)
+    
     model = load_model()
 
     if st.button("Predict"):
@@ -165,3 +147,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+# Run the app with: streamlit run streamlitimmoliza.py

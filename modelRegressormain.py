@@ -49,7 +49,7 @@ def encode_categorical_features(df: pd.DataFrame, columns_to_encode: List[str]) 
 
 # Define columns to encode
 columns_to_encode = ['district', 'floodingzone', 'subtypeofproperty', 'peb', 'province', 'region',
-                     'stateofbuilding', 'swimmingpool', 'terrace', 'kitchen', 'garden']
+                     'stateofbuilding', 'swimmingpool', 'terrace', 'kitchen', 'garden', 'typeofproperty']
 
 # Impute missing values
 df = impute_data(df)
@@ -92,6 +92,7 @@ def train_and_evaluate_model(X_train: np.ndarray, y_train: np.ndarray, X_test: n
     print(f"R^2 Score: {r2}")
 
     print(df_final.columns)
+    X_train.to_csv('X_train.csv', index=False)
     model.save_model('catboost_model.cbm')
 
 # Train and evaluate the model
