@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 from catboost import CatBoostRegressor
 import pickle
+from sklearn.preprocessing import OneHotEncoder
 
 # Function to load the model
 def load_model():
@@ -11,7 +12,7 @@ def load_model():
 
 # Load the one-hot encoder
 with open('onehotencoder.plk', 'rb') as f:
-    one = pickle.load(f)
+    one : OneHotEncoder = pickle.load(f)
 
 # Load the cleaned dataset
 df = pd.read_csv('cleaned_dataset.csv')
@@ -37,6 +38,9 @@ def preprocess_input(user_input):
 def main():
     st.title("🏡 Real Estate Price Prediction")
     st.markdown("### Predict the price of your property with our advanced CatBoost model")
+    st.markdown("#### 📝 Provide the details of the property in the sidebar to get started!"
+                " Click the 'Predict' button to get the estimated price.")
+    st.markdown('<center><img src="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExeXVzb2dxNHk2cXBtZmk0ZjYxbTh6ZGVha29la2liMmQ4eHJlZmYyYSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/1AHZBEKJx5Mf57NQqb/giphy-downsized-large.gif"></center>', unsafe_allow_html=True)
 
     st.sidebar.header("Property Details")
     st.sidebar.markdown("Provide the details of the property for prediction:")
