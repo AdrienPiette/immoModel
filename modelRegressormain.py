@@ -48,7 +48,7 @@ def encode_categorical_features(df: pd.DataFrame, columns_to_encode: List[str]) 
     encoded_data = one.fit_transform(df[columns_to_encode])
     encoded_df = pd.DataFrame(encoded_data, columns=one.get_feature_names_out(columns_to_encode))
 
-    with open('onehotencoder.plk', 'wb') as f:
+    with open('onehotencoder.pkl', 'wb') as f:
         pickle.dump(one, f)
 
     return pd.concat([df.drop(columns=columns_to_encode), encoded_df], axis=1)
