@@ -11,23 +11,23 @@ def load_model():
     return model
 
 # Load the one-hot encoder
-with open('onehotencoder.plk', 'rb') as f:
-    one : OneHotEncoder = pickle.load(f)
+with open('onehotencoder.pkl', 'rb') as f:
+    one: OneHotEncoder = pickle.load(f)
 
 # Load the cleaned dataset
 df = pd.read_csv('cleaned_dataset.csv')
 
 # One-hot encode the categorical features
-columns_to_encode = ['district', 'floodingzone', 'subtypeofproperty', 'peb', 'province', 'region',
-                     'stateofbuilding', 'swimmingpool', 'terrace', 'kitchen', 'garden','typeofproperty']
+columns_to_encode = ['district', 'subtypeofproperty', 'peb', 'province', 'region',
+                     'stateofbuilding', 'swimmingpool', 'terrace', 'kitchen', 'garden', 'typeofproperty']
 one_encoding = one.transform(df[columns_to_encode])
 one_encoding_df = pd.DataFrame(one_encoding, columns=one.get_feature_names_out(columns_to_encode))
 df_final = pd.concat([df.drop(columns=columns_to_encode), one_encoding_df], axis=1)
 
 # Function to preprocess user input
 def preprocess_input(user_input):
-    categorical_features = ['district', 'floodingzone', 'subtypeofproperty', 'peb', 'province', 'region',
-                     'stateofbuilding', 'swimmingpool', 'terrace', 'kitchen', 'garden','typeofproperty']
+    categorical_features = ['district', 'subtypeofproperty', 'peb', 'province', 'region',
+                            'stateofbuilding', 'swimmingpool', 'terrace', 'kitchen', 'garden', 'typeofproperty']
     user_input_df = pd.DataFrame([user_input])
     one_encoding = one.transform(user_input_df[categorical_features])
     one_encoding_df = pd.DataFrame(one_encoding, columns=one.get_feature_names_out(categorical_features))
@@ -38,8 +38,7 @@ def preprocess_input(user_input):
 def main():
     st.title("🏡 Real Estate Price Prediction")
     st.markdown("### Predict the price of your property with our advanced CatBoost model")
-    st.markdown("#### 📝 Provide the details of the property in the sidebar to get started!"
-                " Click the 'Predict' button to get the estimated price.")
+    st.markdown("#### 📝 Provide the details of the property in the sidebar to get started! Click the 'Predict' button to get the estimated price.")
     st.markdown('<center><img src="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExeXVzb2dxNHk2cXBtZmk0ZjYxbTh6ZGVha29la2liMmQ4eHJlZmYyYSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/1AHZBEKJx5Mf57NQqb/giphy-downsized-large.gif"></center>', unsafe_allow_html=True)
 
     st.sidebar.header("Property Details")
@@ -54,8 +53,8 @@ def main():
                         "Veurne", "Virton", "Waremme"]
 
     fireplace_options = ["Yes", "No"]
-    floodingzone_options = ["Yes", "No"]
-    subtypeofproperty_options = ["apartment", "apartement_block", "bungalow", "castle", "chalet", "country_cottage", "duplex", "exeptional_property",
+
+    subtypeofproperty_options = ["apartment", "apartement_block", "bungalow", "castle", "chalet", "country_cottage", "duplex", "exceptional_property",
                                  "farmhouse", "flat_studio", "ground_floor", "house", "kot", "loft", "mansion", "manor_house",
                                  "mixed_use_building", "other_property", "penthouse", "service_flat", "pavilion", "town_house", "triplex", "villa"]
 
@@ -71,7 +70,7 @@ def main():
     bathroom_options = ["1", "2", "3", "4", "5", "6"]
     bedroom_options = ["1", "2", "3", "4", "5", "6"]
     showercount_options = ["1", "2", "3", "4", "5", "6"]
-    stateofbuilding_options = ["As new", "Good", "Just renovated", "To be done up", "To restore"]
+    stateofbuilding_options = ["0", "1", "2", "3", "4", "5"]
     swimmingpool_options = ["Yes", "No"]
     terrace_options = ["Yes", "No"]
     toilet_options = ["1", "2", "3", "4", "5", "6"]
@@ -100,44 +99,38 @@ def main():
         showercount = st.selectbox("Shower Count", showercount_options)
         toilet = st.selectbox("Toilet", toilet_options)
         garden = st.selectbox("Garden", garden_options)
-        garden = garden_options.index(garden)
         swimmingpool = st.selectbox("Swimming Pool", swimmingpool_options)
-        swimmingpool = swimmingpool_options.index(swimmingpool)
         terrace = st.selectbox("Terrace", terrace_options)
         fireplace = st.selectbox("Fireplace", fireplace_options)
-        fireplace = fireplace_options.index(fireplace)
-        floodingzone = st.selectbox("Flooding Zone", floodingzone_options)
-        floodingzone = floodingzone_options.index(floodingzone)
+        
 
         st.markdown("### 📜 Additional Information")
         peb = st.selectbox("PEB", peb_options)
         stateofbuilding = st.selectbox("State of Building", stateofbuilding_options)
-        
 
+    # Collect user input
     user_input = {
         'bathroomcount': bathroom,
         'bedroomcount': bedroom,
         'constructionyear': construction_year,
         'livingarea': living_area,
         'numberoffacades': number_of_facades,
-        'roomcout': roomcount,
+        'roomcount': roomcount,
         'showercount': showercount,
         'surfaceofplot': surfaceofplot,
         'toiletcount': toilet,
         'district': district,
-        'floodingzone': floodingzone,
         'subtypeofproperty': subtypeofproperty,
         'peb': peb,
         'province': province,
         'region': region,
-        'fireplace': fireplace, 
+        'fireplace': fireplace,
         'stateofbuilding': stateofbuilding,
         'swimmingpool': swimmingpool,
         'terrace': terrace,
         'kitchen': kitchen,
         'garden': garden,
-        'typeofproperty': typeofproperty,        
-    
+        'typeofproperty': typeofproperty,
     }
 
     # Preprocess the user input
@@ -146,9 +139,11 @@ def main():
     model = load_model()
 
     if st.button("Predict"):
-        prediction = model.predict(user_input_df)
-        st.subheader(f"🏷️ Predicted Price: **€{prediction[0]:,.2f}**")
+        try:
+            prediction = model.predict(user_input_df)
+            st.subheader(f"🏷️ Predicted Price: **€{prediction[0]:,.2f}**")
+        except Exception as e:
+            st.error(f"An error occurred during prediction: {e}")
 
 if __name__ == '__main__':
     main()
-# Run the app with: streamlit run streamlitimmoliza.py

@@ -12,7 +12,7 @@ X = df.drop(columns=['price'])
 
 # Columns to encode
 columns_to_encode = ['district', 'subtypeofproperty', 'peb', 'province', 'region',
-                     'stateofbuilding', 'swimmingpool', 'terrace', 'kitchen', 'garden', 'typeofproperty']
+                    'swimmingpool', 'terrace', 'kitchen', 'garden', 'typeofproperty']
 
 # Initialize OneHotEncoder
 one = OneHotEncoder(sparse_output=False, drop='first')
@@ -28,11 +28,22 @@ with open('onehotencoder.pkl', 'wb') as f:
 # Concatenate the encoded features with the rest of the dataset
 X_encoded = pd.concat([X.drop(columns=columns_to_encode), encoded_df], axis=1)
 
+# Check class distribution
+print("Class distribution in target variable:")
+print(y.value_counts())
+
+# Handle rare classes
+min_class_count = 2  # Minimum number of instances required per class for stratification
+class_counts = y.value_counts()
+rare_classes = class_counts[class_counts < min_class_count].index
+X_filtered = X_encoded[~y.isin(rare_classes)]
+y_filtered = y[~y.isin(rare_classes)]
+
 # Split the dataset into training and testing sets
-X_train, X_test, y_train, y_test = train_test_split(X_encoded, y, test_size=0.2, random_state=42)
+# Use stratify only if classes are sufficiently represented
+X_train, X_test, y_train, y_test = train_test_split(X_filtered, y_filtered, test_size=0.2, random_state=42, stratify=y_filtered)
 
 # Define the CatBoost model
-# Use 'MultiClass' if `y` contains more than 2 unique values
 model = CatBoostClassifier(iterations=100, learning_rate=0.1, depth=6, loss_function='MultiClass')
 
 # Train the model
@@ -48,3 +59,4 @@ print(f"Test Accuracy: {test_accuracy}")
 # Save the model
 with open('catboost_model.pkl', 'wb') as f:
     pickle.dump(model, f)
+  

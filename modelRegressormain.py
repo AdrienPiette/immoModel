@@ -48,8 +48,8 @@ def encode_categorical_features(df: pd.DataFrame, columns_to_encode: List[str]) 
     return pd.concat([df.drop(columns=columns_to_encode), encoded_df], axis=1)
 
 # Define columns to encode
-columns_to_encode = ['district', 'floodingzone', 'subtypeofproperty', 'peb', 'province', 'region',
-                     'stateofbuilding', 'swimmingpool', 'terrace', 'kitchen', 'garden', 'typeofproperty']
+columns_to_encode = ['district','subtypeofproperty', 'peb', 'province', 'region',
+                     'swimmingpool', 'terrace', 'kitchen', 'garden', 'typeofproperty']
 
 # Impute missing values
 df = impute_data(df)
