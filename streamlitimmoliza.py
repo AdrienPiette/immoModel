@@ -3,6 +3,7 @@ import pandas as pd
 from catboost import CatBoostRegressor
 import pickle
 from sklearn.preprocessing import OneHotEncoder
+import numpy as np
 
 # Function to load the model
 def load_model():
@@ -10,27 +11,40 @@ def load_model():
     model.load_model('catboost_model.cbm')
     return model
 
-# Load the one-hot encoder
-with open('onehotencoder.pkl', 'rb') as f:
-    one: OneHotEncoder = pickle.load(f)
-
 # Load the cleaned dataset
 df = pd.read_csv('dataset.csv')
 
+# Define columns to encode
+columns_to_encode = ['District', 'Furnished', 'SubtypeOfProperty', 'PEB', 'Province', 'Region',
+                     'SwimmingPool', 'Terrace', 'Kitchen', 'Garden', 'TypeOfProperty', 'StateOfBuilding', 'TypeOfSale']
+
+# Fill NaN values with 'missing' placeholder and convert to string
+df[columns_to_encode] = df[columns_to_encode].fillna('missing').astype(str)
+
+# Fit the one-hot encoder
+one = OneHotEncoder(handle_unknown='ignore')
+one.fit(df[columns_to_encode])
+
+# Save the encoder for future use
+with open('onehotencoder.pkl', 'wb') as f:
+    pickle.dump(one, f)
+
 # One-hot encode the categorical features
-columns_to_encode =  ['District','Furnished', 'SubtypeOfProperty', 'PEB', 'Province', 'Region',
-                     'SwimmingPool', 'Terrace', 'Kitchen', 'Garden', 'TypeOfProperty', 'StateOfBuilding', 'TypeOfSale' ]
 one_encoding = one.transform(df[columns_to_encode])
-one_encoding_df = pd.DataFrame(one_encoding, columns=one.get_feature_names_out(columns_to_encode))
+one_encoding_df = pd.DataFrame(one_encoding.toarray(), columns=one.get_feature_names_out(columns_to_encode))
 df_final = pd.concat([df.drop(columns=columns_to_encode), one_encoding_df], axis=1)
 
 # Function to preprocess user input
 def preprocess_input(user_input):
-    categorical_features =  ['District','Furnished', 'SubtypeOfProperty', 'PEB', 'Province', 'Region',
-                     'SwimmingPool', 'Terrace', 'Kitchen', 'Garden', 'TypeOfProperty', 'StateOfBuilding', 'TypeOfSale' ]
+    categorical_features = ['District', 'Furnished', 'SubtypeOfProperty', 'PEB', 'Province', 'Region',
+                            'SwimmingPool', 'Terrace', 'Kitchen', 'Garden', 'TypeOfProperty', 'StateOfBuilding', 'TypeOfSale']
     user_input_df = pd.DataFrame([user_input])
+    
+    # Fill NaN values with 'missing' placeholder and convert to string
+    user_input_df[categorical_features] = user_input_df[categorical_features].fillna('missing').astype(str)
+    
     one_encoding = one.transform(user_input_df[categorical_features])
-    one_encoding_df = pd.DataFrame(one_encoding, columns=one.get_feature_names_out(categorical_features))
+    one_encoding_df = pd.DataFrame(one_encoding.toarray(), columns=one.get_feature_names_out(categorical_features))
     user_input_df = pd.concat([user_input_df.drop(columns=categorical_features), one_encoding_df], axis=1)
     return user_input_df
 
@@ -45,7 +59,7 @@ def main():
     st.sidebar.markdown("Provide the details of the property for prediction:")
 
     # Predefined options for each feature
-    district_options = ["Aalst", "Antwerp", "Arlon", "Ath", "Bastogne", "Brugge", "Brussels", "Charleroi",
+    district_options = ["Antwerp", "Arlon", "Ath", "Bastogne", "Brugge", "Brussels", "Charleroi",
                         "Dendermonde", "Diksmuide", "Dinant", "Eeklo", "Gent", "Halle-Vilvoorde", "Hasselt", "Huy",
                         "Ieper", "Kortrijk", "Leuven", "Liège", "Maaseik", "Marche-en-Famenne", "Mechelen", "Mons",
                         "Mouscron", "Namur", "Neufchâteau", "Nivelles", "Oostend", "Oudenaarde", "Philippeville", "Sint-Niklaas",
@@ -75,7 +89,7 @@ def main():
     toilet_options = ["1", "2", "3", "4", "5", "6"]
     typeofproperty_options = ["Apartment", "House"]
     stateofbuilding_options = ["As New", "Good","To renovate"]
-
+    type_of_sale_options = ["For sale", "To rent"]
     # User input fields
     with st.sidebar:
         st.markdown("### 📑 General Information")
@@ -84,7 +98,7 @@ def main():
         province = st.selectbox("Province", province_options)
         region = st.selectbox("Region", region_options)
         district = st.selectbox("District", district_options)
-
+        furnished = st.selectbox("Furnished", ["Yes", "No"])
         st.markdown("### 📐 Property Details")
         construction_year = st.number_input("Construction Year", min_value=1800, max_value=2024, value=2020)
         living_area = st.number_input("Living Area (m²)", min_value=10, max_value=1000, value=100)
@@ -102,24 +116,26 @@ def main():
         swimmingpool = st.selectbox("Swimming Pool", swimmingpool_options)
         terrace = st.selectbox("Terrace", terrace_options)
         fireplace = st.selectbox("Fireplace", fireplace_options)
-        
 
         st.markdown("### 📜 Additional Information")
         peb = st.selectbox("PEB", peb_options)
         stateofbuilding = st.selectbox("State of Building", stateofbuilding_options)
-
+        type_of_sale_options = st.selectbox("Type of Sale", type_of_sale_options)
+        monthlycharges = st.number_input("Monthly Charges", min_value=0, max_value=10000, value=100)
     # Collect user input
     user_input = {
         'BathroomCount': bathroom,
         'BedroomCount': bedroom,
         'ConstructionYear': construction_year,
         'LivingArea': living_area,
+        'MonthlyCharges': monthlycharges,
         'NumberOfFacades': number_of_facades,
         'RoomCount': roomcount,
         'ShowerCount': showercount,
         'SurfaceOfPlot': surfaceofplot,
         'ToiletCount': toilet,
         'District': district,
+        'Furnished': furnished,
         'SubtypeOfProperty': subtypeofproperty,
         'PEB': peb,
         'Province': province,
@@ -130,11 +146,12 @@ def main():
         'Kitchen': kitchen,
         'Garden': garden,
         'TypeOfProperty': typeofproperty,
+        'TypeOfSale': type_of_sale_options
     }
 
     # Preprocess the user input
     user_input_df = preprocess_input(user_input)
-    
+
     model = load_model()
 
     if st.button("Predict"):
