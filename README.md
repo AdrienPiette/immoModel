@@ -116,18 +116,18 @@ Deployment with Streamlit on Render
 
 To deploy the model using Streamlit on Render, follow these steps:
 
-    Set Up Streamlit App:
+- Set Up Streamlit App:
         Create a streamlit_app.py file in the project directory. This file should include the code to load the model and present the prediction interface.
 
-    Create a requirements.txt for Deployment:
+- Create a requirements.txt for Deployment:
         List all required packages for the Streamlit app. Include packages like streamlit, catboost, and any other dependencies.
 
-    Deploy on Render:
+- Deploy on Render:
         Go to Render and create a new Web Service.
         Connect your GitHub repository and select the streamlit_app.py file.
         Configure the build and start commands (e.g., streamlit run streamlit_app.py).
 
-    Test Your Deployment:
+- Test Your Deployment:
         Once deployed, test the Streamlit app to ensure it functions correctly and provides accurate predictions.
 
 By following these steps, you will be able to deploy your real estate price prediction model and make it accessible through a web interface.
