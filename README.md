@@ -109,4 +109,3 @@ To run the project, follow these steps:
 
 ---
 
-Feel free to add more GIFs and emojis where you see fit! You can use online tools like Giphy to find relevant GIFs and GitHub’s emoji cheat sheet for more emojis.
