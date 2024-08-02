@@ -10,7 +10,7 @@ from typing import List
 import pickle
 
 # Load dataset
-df = pd.read_csv('cleaned_dataset.csv')
+df = pd.read_csv('dataset.csv')
 
 
 def impute_data(df: pd.DataFrame) -> pd.DataFrame:
@@ -38,18 +38,24 @@ def encode_categorical_features(df: pd.DataFrame, columns_to_encode: List[str]) 
     
     Returns:
     - pd.DataFrame: DataFrame with encoded features.
+    
     """
+    # Define columns to encode
+    columns_to_encode = ['District','Furnished', 'SubtypeOfProperty', 'PEB', 'Province', 'Region',
+                     'SwimmingPool', 'Terrace', 'Kitchen', 'Garden', 'TypeOfProperty', 'StateOfBuilding', 'TypeOfSale' ]
+    
     one = OneHotEncoder(sparse_output=False, drop='first')
     encoded_data = one.fit_transform(df[columns_to_encode])
     encoded_df = pd.DataFrame(encoded_data, columns=one.get_feature_names_out(columns_to_encode))
+
     with open('onehotencoder.plk', 'wb') as f:
         pickle.dump(one, f)
 
     return pd.concat([df.drop(columns=columns_to_encode), encoded_df], axis=1)
 
 # Define columns to encode
-columns_to_encode = ['district','subtypeofproperty', 'peb', 'province', 'region',
-                     'swimmingpool', 'terrace', 'kitchen', 'garden', 'typeofproperty']
+columns_to_encode = ['District','Furnished', 'SubtypeOfProperty', 'PEB', 'Province', 'Region',
+                     'SwimmingPool', 'Terrace', 'Kitchen', 'Garden', 'TypeOfProperty', 'StateOfBuilding', 'TypeOfSale' ]
 
 # Impute missing values
 df = impute_data(df)
@@ -58,8 +64,8 @@ df = impute_data(df)
 df_final = encode_categorical_features(df, columns_to_encode)
 
 # Prepare features and target variable
-y = df_final['price']
-X = df_final.drop(columns=['price'])
+y = df_final['Price']
+X = df_final.drop(columns=['Price'])
 
 # Split the data
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)

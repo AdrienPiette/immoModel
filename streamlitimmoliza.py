@@ -15,19 +15,19 @@ with open('onehotencoder.pkl', 'rb') as f:
     one: OneHotEncoder = pickle.load(f)
 
 # Load the cleaned dataset
-df = pd.read_csv('cleaned_dataset.csv')
+df = pd.read_csv('dataset.csv')
 
 # One-hot encode the categorical features
-columns_to_encode = ['district', 'subtypeofproperty', 'peb', 'province', 'region',
-                     'stateofbuilding', 'swimmingpool', 'terrace', 'kitchen', 'garden', 'typeofproperty']
+columns_to_encode =  ['District','Furnished', 'SubtypeOfProperty', 'PEB', 'Province', 'Region',
+                     'SwimmingPool', 'Terrace', 'Kitchen', 'Garden', 'TypeOfProperty', 'StateOfBuilding', 'TypeOfSale' ]
 one_encoding = one.transform(df[columns_to_encode])
 one_encoding_df = pd.DataFrame(one_encoding, columns=one.get_feature_names_out(columns_to_encode))
 df_final = pd.concat([df.drop(columns=columns_to_encode), one_encoding_df], axis=1)
 
 # Function to preprocess user input
 def preprocess_input(user_input):
-    categorical_features = ['district', 'subtypeofproperty', 'peb', 'province', 'region',
-                            'stateofbuilding', 'swimmingpool', 'terrace', 'kitchen', 'garden', 'typeofproperty']
+    categorical_features =  ['District','Furnished', 'SubtypeOfProperty', 'PEB', 'Province', 'Region',
+                     'SwimmingPool', 'Terrace', 'Kitchen', 'Garden', 'TypeOfProperty', 'StateOfBuilding', 'TypeOfSale' ]
     user_input_df = pd.DataFrame([user_input])
     one_encoding = one.transform(user_input_df[categorical_features])
     one_encoding_df = pd.DataFrame(one_encoding, columns=one.get_feature_names_out(categorical_features))
@@ -70,11 +70,11 @@ def main():
     bathroom_options = ["1", "2", "3", "4", "5", "6"]
     bedroom_options = ["1", "2", "3", "4", "5", "6"]
     showercount_options = ["1", "2", "3", "4", "5", "6"]
-    stateofbuilding_options = ["0", "1", "2", "3", "4", "5"]
     swimmingpool_options = ["Yes", "No"]
     terrace_options = ["Yes", "No"]
     toilet_options = ["1", "2", "3", "4", "5", "6"]
     typeofproperty_options = ["Apartment", "House"]
+    stateofbuilding_options = ["As New", "Good","To renovate"]
 
     # User input fields
     with st.sidebar:
@@ -110,27 +110,26 @@ def main():
 
     # Collect user input
     user_input = {
-        'bathroomcount': bathroom,
-        'bedroomcount': bedroom,
-        'constructionyear': construction_year,
-        'livingarea': living_area,
-        'numberoffacades': number_of_facades,
-        'roomcount': roomcount,
-        'showercount': showercount,
-        'surfaceofplot': surfaceofplot,
-        'toiletcount': toilet,
-        'district': district,
-        'subtypeofproperty': subtypeofproperty,
-        'peb': peb,
-        'province': province,
-        'region': region,
-        'fireplace': fireplace,
-        'stateofbuilding': stateofbuilding,
-        'swimmingpool': swimmingpool,
-        'terrace': terrace,
-        'kitchen': kitchen,
-        'garden': garden,
-        'typeofproperty': typeofproperty,
+        'BathroomCount': bathroom,
+        'BedroomCount': bedroom,
+        'ConstructionYear': construction_year,
+        'LivingArea': living_area,
+        'NumberOfFacades': number_of_facades,
+        'RoomCount': roomcount,
+        'ShowerCount': showercount,
+        'SurfaceOfPlot': surfaceofplot,
+        'ToiletCount': toilet,
+        'District': district,
+        'SubtypeOfProperty': subtypeofproperty,
+        'PEB': peb,
+        'Province': province,
+        'Region': region,
+        'StateOfBuilding': stateofbuilding,
+        'SwimmingPool': swimmingpool,
+        'Terrace': terrace,
+        'Kitchen': kitchen,
+        'Garden': garden,
+        'TypeOfProperty': typeofproperty,
     }
 
     # Preprocess the user input

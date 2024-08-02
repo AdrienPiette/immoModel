@@ -6,7 +6,7 @@ from sklearn.preprocessing import OneHotEncoder
 import pickle
 
 # Load your dataset
-df = pd.read_csv('cleaned_dataset.csv')
+df = pd.read_csv('dataset.csv')
 y = df['price']
 X = df.drop(columns=['price'])
 
@@ -22,7 +22,7 @@ encoded_data = one.fit_transform(X[columns_to_encode])
 encoded_df = pd.DataFrame(encoded_data, columns=one.get_feature_names_out(columns_to_encode))
 
 # Save the OneHotEncoder to a pickle file
-with open('onehotencoder.pkl', 'wb') as f:
+with open('onehotencoder.pkl', 'wb') as f: 
     pickle.dump(one, f)
 
 # Concatenate the encoded features with the rest of the dataset
