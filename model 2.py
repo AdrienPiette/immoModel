@@ -57,6 +57,6 @@ print(f"Train Accuracy: {train_accuracy}")
 print(f"Test Accuracy: {test_accuracy}")
 
 # Save the model
-with open('catboost_model.pkl', 'wb') as f:
+with open('catboost_model.cbm', 'wb') as f:
     pickle.dump(model, f)
   

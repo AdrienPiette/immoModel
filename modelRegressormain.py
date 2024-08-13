@@ -62,6 +62,7 @@ df = impute_data(df)
 
 # Encode categorical features
 df_final = encode_categorical_features(df, columns_to_encode)
+print(df_final.columns)
 
 # Prepare features and target variable
 y = df_final['Price']
@@ -159,5 +160,4 @@ def perform_grid_search(X_train: np.ndarray, y_train: np.ndarray) -> None:
 
 # Perform grid search and evaluate the best model
 
-perform_grid_search(X_train_imputed, y_train)
-'''
+perform_grid_search(X_train_imputed, y_train)'''
