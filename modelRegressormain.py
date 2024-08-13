@@ -28,7 +28,7 @@ def impute_data(df: pd.DataFrame) -> pd.DataFrame:
     df[numeric_columns] = imputer.fit_transform(df[numeric_columns])
     return df
 
-def encode_categorical_features(df: pd.DataFrame, columns_to_encode: List[str]) -> pd.DataFrame:
+def encode_categorical_features(df: pd.DataFrame) -> pd.DataFrame:
     """
     Encodes categorical features using OneHotEncoder.
     
@@ -53,15 +53,12 @@ def encode_categorical_features(df: pd.DataFrame, columns_to_encode: List[str]) 
 
     return pd.concat([df.drop(columns=columns_to_encode), encoded_df], axis=1)
 
-# Define columns to encode
-columns_to_encode = ['District','Furnished', 'SubtypeOfProperty', 'PEB', 'Province', 'Region',
-                     'SwimmingPool', 'Terrace', 'Kitchen', 'Garden', 'TypeOfProperty', 'StateOfBuilding', 'TypeOfSale' ]
 
 # Impute missing values
 df = impute_data(df)
 
 # Encode categorical features
-df_final = encode_categorical_features(df, columns_to_encode)
+df_final = encode_categorical_features(df)
 print(df_final.columns)
 
 # Prepare features and target variable
