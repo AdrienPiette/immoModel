@@ -9,7 +9,7 @@ import numpy as np
 
 def load_model():
     model = CatBoostRegressor()
-    model.load_model('catboost_model.cbm')
+    model.load_model('catboost_model_optuna.cbm')
     return model
 
 # Load the cleaned dataset
@@ -27,7 +27,7 @@ one = OneHotEncoder(handle_unknown='ignore')
 one.fit(df[columns_to_encode])
 
 # Save the encoder for future use
-with open('onehotencoder.pkl', 'wb') as f:
+with open('one_hot_encoder.pkl', 'wb') as f:
     pickle.dump(one, f)
 
 # One-hot encode the categorical features
