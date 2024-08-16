@@ -59,7 +59,7 @@ def main():
     st.sidebar.markdown("Provide the details of the property for prediction:")
 
     # Predefined options for each feature
-    district_options = ["Aalst", "Antwerp", "Arlon", "Ath", "Bastogne", "Brugge", "Brussels", "Charleroi",
+    district_options = ["Antwerp", "Arlon", "Ath", "Bastogne", "Brugge", "Brussels", "Charleroi",
                         "Dendermonde", "Diksmuide", "Dinant", "Eeklo", "Gent", "Halle-Vilvoorde", "Hasselt", "Huy",
                         "Ieper", "Kortrijk", "Leuven", "Liège", "Maaseik", "Marche-en-Famenne", "Mechelen", "Mons",
                         "Mouscron", "Namur", "Neufchâteau", "Nivelles", "Oostend", "Oudenaarde", "Philippeville", "Sint-Niklaas",
