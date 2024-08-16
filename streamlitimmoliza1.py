@@ -13,7 +13,7 @@ def load_model():
     return model
 
 # Load the cleaned dataset
-df = pd.read_csv('dataset.csv')
+df = pd.read_csv('cleaned_data.csv')
 
 # Define columns to encode
 columns_to_encode = ['District', 'Furnished', 'SubtypeOfProperty', 'PEB', 'Province', 'Region',
