@@ -6,6 +6,7 @@ from sklearn.preprocessing import OneHotEncoder
 import numpy as np
 
 # Function to load the model
+
 def load_model():
     model = CatBoostRegressor()
     model.load_model('catboost_model.cbm')
@@ -49,6 +50,7 @@ def preprocess_input(user_input):
     return user_input_df
 
 # Main function to run the Streamlit app
+
 def main():
     st.title("🏡 Real Estate Price Prediction")
     st.markdown("### Predict the price of your property with our advanced CatBoost model")
@@ -90,6 +92,7 @@ def main():
     typeofproperty_options = ["Apartment", "House"]
     stateofbuilding_options = ["As New", "Good","To renovate"]
     type_of_sale_options = ["For sale", "To rent"]
+
     # User input fields
     with st.sidebar:
         st.markdown("### 📑 General Information")
@@ -122,6 +125,7 @@ def main():
         stateofbuilding = st.selectbox("State of Building", stateofbuilding_options)
         type_of_sale_options = st.selectbox("Type of Sale", type_of_sale_options)
         monthlycharges = st.number_input("Monthly Charges", min_value=0, max_value=10000, value=100)
+
     # Collect user input
     user_input = {
         'BathroomCount': bathroom,
