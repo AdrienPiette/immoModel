@@ -61,7 +61,7 @@ def objective(trial):
 
 # Create a study object and optimize
 study = optuna.create_study(direction='minimize')
-study.optimize(objective, n_trials=50)  # Number of trials can be adjusted
+study.optimize(objective, n_trials=200)  # Number of trials can be adjusted
 
 # Print the best parameters and best score
 print("Best parameters: ", study.best_params)
@@ -85,3 +85,9 @@ print('Final R-squared:', final_r2)
 # Save the final model
 final_model.save_model('catboost_model_optuna.cbm')
 print("Final model has been saved.")
+
+
+'''Final Mean Squared Error: 56169186566.31005
+Final Mean Absolute Error: 100897.71230328045
+Final R-squared: 0.7825240089572479
+Final model has been saved.'''
